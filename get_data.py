@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import pandas as pd
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -25,13 +26,16 @@ class NetworkDataExtract():
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         
-    def csv_tojson_convertor(self):
+    def csv_tojson_convertor(self, file_path):
         try:
-            pass
+            data = pd.read_csv(file_path)
+            data.reset_index(drop=True, inplace=True)
+            records = list(json.loads(data.T.to_json()).values())
+            return records
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         
-    def pusing_data_tomongo(self):
+    def pushing_data_tomongo(self):
         try:
             pass
         except Exception as e:
@@ -39,5 +43,7 @@ class NetworkDataExtract():
 
 
 if __name__ == "__main__":
-    pass
-            
+    FILE_PATH = './Network_data/NetworkData.csv'
+    data_extractor = NetworkDataExtract()
+    records =data_extractor.csv_tojson_convertor(FILE_PATH)
+    print(records)
