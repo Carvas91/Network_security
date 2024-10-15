@@ -1,4 +1,4 @@
-.env
-venv
-logs
-Network_Security.egg-info
+.env/
+venv/
+logs/
+Network_Security.egg-info/
