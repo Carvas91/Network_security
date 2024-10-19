@@ -13,7 +13,10 @@ class TrainingPipelineConfig:
         pass
 class DataIngestionConfig:
     def __init__(self):
-        pass
+        self.feature_store_path = 
+        self.train_test_split_ratio = 
+        training_file_path
+        testing_file_path
 
 class DataValidationConfig:
     def __init__(self):

@@ -19,9 +19,9 @@ MONGO_DB_URL = os.getenv("MONGO_DB_URL")
 print(MONGO_DB_URL)
 
 class DataIngestion:
-    def __init__(self):
+    def __init__(self, data_ingestion_config: DataIngestionConfig):
         try:
-            pass
+            self.data_ingestion_config = data_ingestion_config
         except Exception as e:
             raise NetworkSecurityException(e,sys)
 
@@ -59,12 +59,28 @@ class DataIngestion:
             train_set, test_set = train_test_split(
                 dataframe, test_size= self.data_ingestion_config.train_test_split_ratio )
             dir_path = os.path.dirname(self.data_ingestion_config.training_file_path)
+            logging.info(f"Exporting train and test file path")
+            train_set.to_csv(
+                self.data_ingestion_config.training_file_path,  index=False, heafer=True
+            )
+            test_set.to_csv(
+                self.data_ingestion_config.testing_file_path,  index=False, heafer=True
+            )
+            logging.info("Exported train and test file path")
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         
     def initiate_data_ingestion(self):
         try:
-            pass
+            data_frame = self.export_collection_as_df()
+            data_frame = self.export_data_into_feature_store(data_frame)
+            self.split_data_as_train_test(data_frame)
+
+            data_ingestion_artifact = DataIngestionArtifact(trained_file_path = self.data_ingestion_config.training_file_path, 
+                                  test_file_path = self.data_ingestion_config.testing_file_path)
+            
+            return data_ingestion_artifact
+
         except Exception as e:
             raise NetworkSecurityException(e,sys)
 
